@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Git Visualizer</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Offline Git Visualizer</h1>
+            <p class="subtitle">Parse and explore Git repository history locally</p>
+        </header>
+
+        <main class="main">
+            <section class="input-section">
+                <div class="input-group">
+                    <label for="repoPath" class="input-label">
+                        Repository Path
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="repoPath" 
+                            class="repo-input" 
+                            placeholder="Enter path to Git repository (e.g., C:/Users/username/project)"
+                            autocomplete="off"
+                        />
+                        <button 
+                            id="loadBtn" 
+                            class="load-btn"
+                            disabled
+                        >
+                            Load Commits
+                        </button>
+                    </div>
+                    <div class="input-hint">
+                        Provide the full path to a local Git repository
+                    </div>
+                </div>
+            </section>
+
+            <section class="status-section" id="statusSection" style="display: none;">
+                <div class="status-message" id="statusMessage"></div>
+            </section>
+
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2>Repository Analysis</h2>
+                    <div class="stats-container" id="statsContainer"></div>
+                </div>
+                
+                <div class="visualization-container">
+                    <div class="viz-header">
+                        <h3>Commit Graph Visualization</h3>
+                        <div class="graph-controls">
+                            <button id="resetZoom" class="viz-btn">Reset Zoom</button>
+                            <button id="toggleLayout" class="viz-btn">Change Layout</button>
+                        </div>
+                        <div class="date-filter">
+                            <label for="dateSlider">Filter by Date:</label>
+                            <input type="range" id="dateSlider" min="0" max="100" value="100" class="date-slider">
+                            <span id="dateRange" class="date-range">All commits</span>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graphContainer">
+                        <svg id="graphSvg" width="800" height="600"></svg>
+                        <!-- Commit Info Panel -->
+                        <div id="commitInfoPanel" class="commit-info-panel">
+                            <div class="panel-header">
+                                <h4>Commit Details</h4>
+                                <button id="closePanel" class="close-panel">&times;</button>
+                            </div>
+                            <div class="panel-content">
+                                <div class="info-row">
+                                    <label>Hash:</label>
+                                    <span id="panelHash"></span>
+                                </div>
+                                <div class="info-row">
+                                    <label>Author:</label>
+                                    <span id="panelAuthor"></span>
+                                </div>
+                                <div class="info-row">
+                                    <label>Date:</label>
+                                    <span id="panelDate"></span>
+                                </div>
+                                <div class="info-row">
+                                    <label>Branches:</label>
+                                    <span id="panelBranches"></span>
+                                </div>
+                                <div class="info-row">
+                                    <label>Message:</label>
+                                    <div id="panelMessage"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="commits-container">
+                    <div class="commits-header">
+                        <h3>Commits</h3>
+                        <div class="commits-controls">
+                            <span class="commits-count" id="commitsCount"></span>
+                            <button id="toggleRaw" class="toggle-btn">Show Raw</button>
+                        </div>
+                    </div>
+                    <div class="commits-content" id="commitsContent"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Offline Git Visualizer - Local-first developer tool</p>
+        </footer>
+    </div>
+
+    <!-- Commit Details Popup Modal -->
+    <div id="commitModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Commit Details</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="commit-info">
+                    <div class="info-row">
+                        <label>Hash:</label>
+                        <span id="modalHash"></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Author:</label>
+                        <span id="modalAuthor"></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Date:</label>
+                        <span id="modalDate"></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Branches:</label>
+                        <span id="modalBranches"></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Message:</label>
+                        <div id="modalMessage"></div>
+                    </div>
+                </div>
+                <div class="commit-details">
+                    <h3>Full Details</h3>
+                    <pre id="modalFullDetails"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/app.js"></script>
+</body>
+</html>
